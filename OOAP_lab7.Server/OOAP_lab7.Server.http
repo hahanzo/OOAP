@@ -1,0 +1,6 @@
+@OOAP_lab7.Server_HostAddress = http://localhost:5171
+
+GET {{OOAP_lab7.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

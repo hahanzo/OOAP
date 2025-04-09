@@ -1,0 +1,23 @@
+<h2>Comments Awaiting Moderation</h2>
+
+<button (click)="handleUndo()" [disabled]="isLoading$ | async">Undo Last Action</button>
+<button (click)="loadComments()" [disabled]="isLoading$ | async">Refresh List</button>
+
+<div *ngIf="isLoading$ | async" class="loading-indicator">Loading...</div>
+<div *ngIf="error$ | async as error" class="error-message">{{ error }}</div>
+
+<div *ngIf="(comments$ | async) as comments; else noComments">
+  <div *ngIf="comments.length > 0; else noComments">
+    <app-comment-item *ngFor="let comment of comments"
+                      [comment]="comment"
+                      (action)="handleAction($event)"
+                      [disabled]="isLoading$ | async">
+    </app-comment-item>
+  </div>
+</div>
+
+<ng-template #noComments>
+  <p *ngIf="!(isLoading$ | async) && !(error$ | async)">
+    No comments are currently pending moderation.
+  </p>
+</ng-template>

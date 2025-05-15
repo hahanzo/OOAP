@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_BASE_URL = 'https://localhost:7234/api/Player'; // !!! ЗАМІНІТЬ ПОРТ ЯКЩО ТРЕБА !!!
+    const API_BASE_URL = 'https://localhost:7234/api/Player';
 
     const playerStateEl = document.getElementById('playerState');
     const currentTrackNameEl = document.getElementById('currentTrackName');
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const setFirstTrackBtn = document.getElementById('setFirstTrackBtn');
     const playlistEl = document.getElementById('playlist');
     const setSequentialStrategyBtn = document.getElementById('setSequentialStrategyBtn');
+    const setRandomStrategyBtn = document.getElementById('setRandomStrategyBtn');
     // const strategyNameEl = document.getElementById('strategyName'); // Якщо потрібно динамічно змінювати
 
     const audioPlayer = document.getElementById('audioPlayer');
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.headers.get("content-type")?.includes("application/json")) {
                 return response.json();
             }
-            return response.text(); // Для відповідей, які не є JSON
+            return response.text();
         } catch (error) {
             console.error('Fetch error:', error);
             alert('Не вдалося з\'єднатися з сервером.');
@@ -72,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (status.state === 'Stopped') {
                 audioPlayer.pause();
                 audioPlayer.currentTime = 0;
-                // Якщо є URL, його варто звільнити, але це робиться при завантаженні нового треку
             }
         }
         updateButtonsState();
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hasTracks = playlistEl.children.length > 0;
         playPauseBtn.disabled = !hasTracks;
         stopBtn.disabled = !hasTracks || currentBackendState === 'Stopped';
-        nextBtn.disabled = !hasTracks; // Можна додати логіку, якщо це останній трек
+        nextBtn.disabled = !hasTracks;
         setFirstTrackBtn.disabled = !hasTracks;
     }
 
@@ -115,8 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playLocalAudio(trackName) {
         const file = localFiles[trackName];
         if (file) {
-            if (audioPlayer.src !== URL.createObjectURL(file)) { // Перевіряємо, щоб не перезавантажувати той самий файл
-                 // Звільняємо попередній Object URL, якщо він існує і це не той самий трек
+            if (audioPlayer.src !== URL.createObjectURL(file)) {
                 if (audioPlayer.src && audioPlayer.src.startsWith('blob:')) {
                     URL.revokeObjectURL(audioPlayer.src);
                 }
@@ -125,17 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
             audioPlayer.play().catch(e => console.error("Error playing audio:", e));
         } else {
             console.warn(`Локальний файл для треку "${trackName}" не знайдено.`);
-            // Можливо, тут варто зупинити відтворення на бекенді або перейти до наступного.
-            // Поки що просто показуємо попередження.
         }
     }
 
     // --- Обробники подій ---
     playPauseBtn.addEventListener('click', async () => {
         if (currentBackendState === 'Playing') {
-            await apiCall('/pause', 'GET'); // Ваш контролер використовує GET для pause
+            await apiCall('/pause', 'GET');
         } else {
-            await apiCall('/play', 'GET'); // Ваш контролер використовує GET для play
+            await apiCall('/play', 'GET');
         }
         updatePlayerStatus();
     });
@@ -147,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextBtn.addEventListener('click', async () => {
         await apiCall('/next', 'GET');
-        updatePlayerStatus(); // Оновлюємо статус, щоб отримати новий трек та стан
+        updatePlayerStatus();
     });
 
     addSelectedFilesBtn.addEventListener('click', async () => {
@@ -192,6 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result) {
             alert(result); // "Set sequential strategy"
             // Можна оновити strategyNameEl, якщо він є
+        }
+    });
+
+    setRandomStrategyBtn.addEventListener('click', async () => {
+        const result = await apiCall('/strategy/random', 'POST');
+        if (result) {
+            alert(result);
         }
     });
 

@@ -55,6 +55,7 @@ namespace Task.Services
         public string NextTrack()
         {
             CurrentTrack = _strategy.GetNext(Playlist, CurrentTrack);
+            Console.WriteLine(CurrentTrack);
             return CurrentTrack;
         }
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Player.Strategy;
 using Task.Observer;
 using Task.Services;
 using Task.Strategy;
@@ -11,10 +13,9 @@ namespace Task.Controllers
     public class PlayerController : ControllerBase
     {
         private static readonly PlayerContext _player = new();
-
         static PlayerController() 
         {
-            _player.Attach(new ConsoleLogger());
+            _player.Attach(new StateConsoleLogger());
         }
 
         [HttpGet("play")]
@@ -80,6 +81,13 @@ namespace Task.Controllers
         {
             _player.SetStrategy(new SequentialStrategy());
             return Ok("Set sequential strategy");
+        }
+
+        [HttpPost("strategy/random")]
+        public IActionResult UseRandomStrategy()
+        {
+            _player.SetStrategy(new RandomStrategy());
+            return Ok("Set random strategy");
         }
     }
 }

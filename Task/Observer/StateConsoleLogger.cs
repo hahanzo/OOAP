@@ -1,6 +1,6 @@
 ﻿namespace Task.Observer
 {
-    public class ConsoleLogger : IPlayerObserver
+    public class StateConsoleLogger : IPlayerObserver
     {
         public void Update(string state, string currentTrack)
         {

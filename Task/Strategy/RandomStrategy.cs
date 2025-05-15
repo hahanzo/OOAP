@@ -12,7 +12,7 @@ namespace Player.Strategy
 
             int[] possibleIndices = new int[playlist.Count];
             int j = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < playlist.Count; i++)
             {
                 if (i != myPosition)
                 {

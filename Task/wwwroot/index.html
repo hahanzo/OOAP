@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-FED">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Веб Плеєр</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="player-container">
+        <h1>Мій Аудіоплеєр</h1>
+
+        <div class="track-info">
+            <p>Стан: <span id="playerState">Stopped</span></p>
+            <p>Поточний трек: <span id="currentTrackName">-</span></p>
+        </div>
+
+        <canvas id="soundWaveCanvas" width="300" height="50"></canvas>
+        <audio id="audioPlayer" ></audio>
+
+        <div class="controls">
+            <button id="playPauseBtn">Play</button>
+            <button id="stopBtn">Stop</button>
+            <button id="nextBtn">Next</button>
+        </div>
+
+        <div class="track-management">
+            <h2>Керування треками</h2>
+            <input type="file" id="fileInput" accept="audio/*" multiple>
+            <button id="addSelectedFilesBtn">Додати обрані файли до плейлиста</button>
+            <button id="setFirstTrackBtn">Зробити перший трек поточним</button>
+        </div>
+
+        <div class="playlist-section">
+            <h2>Плейлист (<span id="strategyName">Sequential</span>)</h2>
+            <ul id="playlist">
+                </ul>
+            <button id="setSequentialStrategyBtn">Використати послідовну стратегію</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
